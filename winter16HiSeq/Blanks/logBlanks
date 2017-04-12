@@ -95,7 +95,7 @@ now ready for Qimme analysis.
 
 #useing qimme to pick De Novo OTUs and assign taxonomy and make OTU table
 
-cd methodsPaper/seqs
+cd blanks
 
 #call qiime
 
