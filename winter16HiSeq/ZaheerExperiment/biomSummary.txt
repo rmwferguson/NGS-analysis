@@ -1,0 +1,53 @@
+Num samples: 38
+Num observations: 752270
+Total count: 9339574
+Table density (fraction of non-zero values): 0.036
+
+Counts/sample summary:
+ Min: 462.0
+ Max: 1022667.0
+ Median: 159636.000
+ Mean: 245778.263
+ Std. dev.: 268935.981
+ Sample Metadata Categories: None provided
+ Observation Metadata Categories: taxonomy
+
+Counts/sample detail:
+ zFA5-: 462.0
+ zFB1-: 1499.0
+ zUB1-: 2544.0
+ zUA4-: 3919.0
+ zUA3-: 7555.0
+ zUB5-: 7884.0
+ zUB4-: 8895.0
+ zUB2-: 12703.0
+ zFB3-: 15502.0
+ zFC2-: 18683.0
+ zCB3-: 26260.0
+ zFA4-: 66587.0
+ zUB3-: 67183.0
+ zFC3-: 68740.0
+ zUA2-: 83112.0
+ zUA1-: 88504.0
+ zCC5-: 111225.0
+ zFC5-: 141816.0
+ zFA2-: 154273.0
+ zCC4-: 164999.0
+ zCB1-: 168132.0
+ zCA4-: 238264.0
+ zFA3-: 249532.0
+ zCA1-: 263631.0
+ zCA5-: 274164.0
+ zUA5-: 277014.0
+ zCB2-: 313588.0
+ zCC3-: 334767.0
+ zCA2-: 342635.0
+ ZCA3-: 347772.0
+ zCB5-: 434280.0
+ zCC2-: 506140.0
+ zCB4-: 541444.0
+ zCC1-: 556990.0
+ zFB2-: 587446.0
+ zFC1-: 886748.0
+ zFA1-: 942015.0
+ zFC4-: 1022667.0
