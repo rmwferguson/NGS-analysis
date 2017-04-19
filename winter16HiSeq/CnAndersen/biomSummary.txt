@@ -1,0 +1,51 @@
+Num samples: 36
+Num observations: 103732
+Total count: 6791643
+Table density (fraction of non-zero values): 0.051
+
+Counts/sample summary:
+ Min: 20097.0
+ Max: 601122.0
+ Median: 132171.000
+ Mean: 188656.750
+ Std. dev.: 128548.245
+ Sample Metadata Categories: None provided
+ Observation Metadata Categories: taxonomy
+
+Counts/sample detail:
+ CN-B6a: 20097.0
+ CN-B3b: 30876.0
+ CN-B5a: 44681.0
+ CN-A6a: 77775.0
+ CN-C2b: 85309.0
+ CN-A5b: 93970.0
+ CN-A5a: 94602.0
+ CN-B4b: 95188.0
+ CN-A3b: 102987.0
+ CN-B4a: 103524.0
+ CN-A2b: 104186.0
+ CN-C6b: 106078.0
+ CN-C6a: 109636.0
+ CN-A4a: 117520.0
+ CN-A4b: 121144.0
+ CN-B5b: 124752.0
+ CN-A6b: 128546.0
+ CN-C3b: 129866.0
+ CN-B6b: 134476.0
+ CN-B2a: 143484.0
+ CN-C2a: 150153.0
+ CN-C5a: 167433.0
+ CN-B3a: 186662.0
+ CN-B2b: 194209.0
+ CN-B1b: 248846.0
+ CN-A3a: 251197.0
+ CN-C4a: 268923.0
+ CN-B1a: 270940.0
+ CN-A1a: 274305.0
+ CN-C3a: 298057.0
+ CN-A1b: 321347.0
+ CN-C5b: 347665.0
+ CN-C1a: 369380.0
+ CN-A2a: 422416.0
+ CN-C4b: 450291.0
+ CN-C1b: 601122.0

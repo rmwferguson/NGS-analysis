@@ -1,0 +1,241 @@
+#zaheer paper miseq analysis. 
+
+# copy seq files into current directory 
+cp **/*.gz . 
+
+# unzip
+gunzip *.gz
+
+# rename something use full to remove rubbish
+#this includes removing indexes
+
+rename 's/AAGAGGCA-//' *.fastq # forward indexes
+rename 's/GTAGAGGA-//' *.fastq
+rename 's/GCTCATGA-//' *.fastq
+rename 's/AGGCAGAA-//' *.fastq
+rename 's/TCCTGAGC-//' *.fastq
+rename 's/GGACTCCT-//' *.fastq
+rename 's/ATCTCAGG-//' *.fastq
+rename 's/TAAGGCGA-//' *.fastq
+rename 's/CGTACTAG-//' *.fastq
+rename 's/TAGGCATG-//' *.fastq
+rename 's/CTCTCTAC-//' *.fastq
+rename 's/CGAGGCTG-//' *.fastq
+rename 's/_CGTCTAAT_L002//' *.fastq #rev indexes
+rename 's/_TCTCTCCG_L002//' *.fastq
+rename 's/_CTCTCTAT_L002//' *.fastq
+rename 's/_GTAAGGAG_L002//' *.fastq
+rename 's/_TATCCTCT_L002//' *.fastq
+rename 's/_ACTGCATA_L002//' *.fastq
+rename 's/_AAGGAGTA_L002//' *.fastq
+rename 's/_CTAAGCCT_L002//' *.fastq
+
+# quality trimming with Sickle (add sickle to folder first)
+
+mkdir qualTrimmed
+
+# for loop to automate
+
+for file in *_R1.fastq; do ./sickle pe -f $file -r ${file%_R1.fastq}_R2.fastq -t sanger -o qualTrimmed/${file%.fastq}_trimmed.fastq -p qualTrimmed/${file%R1.fastq}R2_trimmed.fastq -s qualTrimmed/${file%_R1.fastq}_singles.fastq; done	
+
+#error correction with SPAdes and BayesHammer
+
+cd qualTrimmed
+
+for file in *_R1_trimmed.fastq; do ~rob/spades/SPAdes-3.7.1-Linux/bin/spades.py -o ${file%_R1_trimmed.fastq}_errorCorrected --only-error-correction -1 $file -2 ${file%_R1_trimmed.fastq}_R2_trimmed.fastq -t 8 -m 32 --disable-gzip-output; done 
+
+#house keeping, move files into a central folder and modify seq headers so they work downstream
+
+mkdir allErrorCorrected
+
+cd ..
+
+cp qualTrimmed/**/corrected/*R[0-9]*.fastq qualTrimmed/allErrorCorrected
+
+cd qualTrimmed/allErrorCorrected
+
+for f in *R1*.fastq; do sed -i "/$(grep -m 1 "^@" $f | egrep -o "^[^:]+")/ s/$/ 1:N:0:/" $f; done 
+
+for f in *R2*.fastq; do sed -i "/$(grep -m 1 "^@" $f | egrep -o "^[^:]+")/ s/$/ 2:N:0:/" $f; done
+
+# Join reeds with PANDAseq (this removes primers which you might need so check this)
+
+mkdir pairedSamples
+
+#with loop
+
+for f in *R1*.fastq; do pandaseq -f $f -r ${f%R1_trimmed.00.0_0.cor.fastq}R2_trimmed.00.0_0.cor.fastq -A pear -B -p CCTACGGGNGGCWGCAG -q GACTACHVGGGTATCTAATCC -w pairedSamples/${f%_R1_trimmed.00.0_0.cor.fastq}_paired.fasta -g pairedSamples/${f%_R1_trimmed.00.0_0.cor.fastq}_log.txt; done 
+
+cd pairedSamples 
+
+# adjust seq headers and then combine into one file 
+#can not use _ in sample name
+
+rename 's/_/-/' *.fasta
+rename 's/paired//' *.fasta
+
+
+for f in *.fasta;
+do sample=">$(echo $f | awk -F "." '{print $1}')_" 
+sed -i "s/>/$sample/" $f
+done
+
+cat *.fasta > seqs.fna
+
+cp seqs.fna /home/rob/CN
+cd /home/rob/CN
+
+#now ready for Qimme analysis. 
+
+#useing qimme to pick De Novo OTUs and assign taxonomy and make OTU table
+
+cd /CN
+
+#call qiime
+
+qiime
+
+#count how many seqs in each sample
+#data summary after preprocessing
+
+count_seqs.py -i seqs.fna
+
+7331993  : seqs.fna (Sequence lengths (mean +/- std): 407.4107 +/- 30.8472)
+7331993  : Total
+
+summary.seqs(fasta=seqs.fna)
+
+#QC in mothur
+
+mothur > summary.seqs(fasta=seqs.fna)
+
+Using 1 processors.
+
+		Start	End	NBases	Ambigs	Polymer	NumSeqs
+Minimum:	1	4	4	0	1	1
+2.5%-tile:	1	321	321	0	4	183300
+25%-tile:	1	403	403	0	4	1832999
+Median: 	1	407	407	0	5	3665997
+75%-tile:	1	427	427	0	5	5498995
+97.5%-tile:	1	428	428	0	6	7148694
+Maximum:	1	562	562	25	272	7331993
+Mean:	1	407.411	407.411	0.00519777	4.75868
+# of Seqs:	7331993
+
+Output File Names: 
+seqs.summary
+
+It took 130 secs to summarize 7331993 sequences.
+[WARNING]: your sequence names contained ':'.  I changed them to '_' to avoid problems in your downstream analysis.
+
+
+screen.seqs(fasta=current, maxhomop=8, minlength=400, maxambig=0)
+
+summary.seqs(fasta=current)
+
+
+Using seqs.good.fna as input file for the fasta parameter.
+
+Using 1 processors.
+
+		Start	End	NBases	Ambigs	Polymer	NumSeqs
+Minimum:	1	400	400	0	3	1
+2.5%-tile:	1	402	402	0	4	169792
+25%-tile:	1	403	403	0	4	1697911
+Median: 	1	407	407	0	5	3395822
+75%-tile:	1	427	427	0	5	5093733
+97.5%-tile:	1	428	428	0	6	6621852
+Maximum:	1	562	562	0	8	6791643
+Mean:	1	413.739	413.739	0	4.74038
+# of Seqs:	6791643
+
+Output File Names: 
+seqs.good.summary
+
+It took 116 secs to summarize 6791643 sequences.
+
+quit()
+
+#back in qiime
+
+#pick OTUs deNovo with USEARCH61
+pick_otus.py -i seqs.good.fna -m usearch61 -o usearch_97 -s 0.97 --suppress_reference_chimera_detection
+
+#pick rep otus
+pick_rep_set.py -i usearch_97/seqs.good_otus.txt -f seqs.good.fna -o rep_set.fna
+
+# assign tax to rep seqs
+assign_taxonomy.py -i rep_set.fna -m rdp -o assigned_taxonomy
+
+#make otu table
+make_otu_table.py -i usearch_97/seqs.good_otus.txt -t assigned_taxonomy/rep_set_tax_assignments.txt -o otu_table.biom
+
+#make plots needs map file
+summarize_taxa_through_plots.py -o taxa_summary -i otu_table.biom
+
+#convert biom to human readable
+
+#quit qiime
+exit
+
+biom convert -i otu_table.biom --to-tsv --table-type="OTU table" --header-key taxonomy -o otu_table.txt
+
+#summarise biom/otu table
+biom summarize-table -i otu_table.biom -o biomSummary.txt
+
+
+Num samples: 36
+Num observations: 103732
+Total count: 6791643
+Table density (fraction of non-zero values): 0.051
+
+Counts/sample summary:
+ Min: 20097.0
+ Max: 601122.0
+ Median: 132171.000
+ Mean: 188656.750
+ Std. dev.: 128548.245
+ Sample Metadata Categories: None provided
+ Observation Metadata Categories: taxonomy
+
+Counts/sample detail:
+ CN-B6a: 20097.0
+ CN-B3b: 30876.0
+ CN-B5a: 44681.0
+ CN-A6a: 77775.0
+ CN-C2b: 85309.0
+ CN-A5b: 93970.0
+ CN-A5a: 94602.0
+ CN-B4b: 95188.0
+ CN-A3b: 102987.0
+ CN-B4a: 103524.0
+ CN-A2b: 104186.0
+ CN-C6b: 106078.0
+ CN-C6a: 109636.0
+ CN-A4a: 117520.0
+ CN-A4b: 121144.0
+ CN-B5b: 124752.0
+ CN-A6b: 128546.0
+ CN-C3b: 129866.0
+ CN-B6b: 134476.0
+ CN-B2a: 143484.0
+ CN-C2a: 150153.0
+ CN-C5a: 167433.0
+ CN-B3a: 186662.0
+ CN-B2b: 194209.0
+ CN-B1b: 248846.0
+ CN-A3a: 251197.0
+ CN-C4a: 268923.0
+ CN-B1a: 270940.0
+ CN-A1a: 274305.0
+ CN-C3a: 298057.0
+ CN-A1b: 321347.0
+ CN-C5b: 347665.0
+ CN-C1a: 369380.0
+ CN-A2a: 422416.0
+ CN-C4b: 450291.0
+ CN-C1b: 601122.0
+
+
+
+
