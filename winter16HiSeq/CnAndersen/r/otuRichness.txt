@@ -1,0 +1,37 @@
+x												
+CN.A1a	944			CN.A1a	944	1009	CN.B1a	1045	1059	CN.C1a	1262	1247.5
+CN.A1b	1074			CN.A1b	1074		CN.B1b	1073		CN.C1b	1233	
+CN.A2a	907			CN.A2a	907	873	CN.B2a	550	721.5	CN.C2a	1060	939
+CN.A2b	839			CN.A2b	839		CN.B2b	893		CN.C2b	818	
+CN.A3a	781			CN.A3a	781	763	CN.B3a	563	551	CN.C3a	879	844.5
+CN.A3b	745			CN.A3b	745		CN.B3b	539		CN.C3b	810	
+CN.A4a	567			CN.A4a	567	595	CN.B4a	504	538.5	CN.C4a	636	668
+CN.A4b	623			CN.A4b	623		CN.B4b	573		CN.C4b	700	
+CN.A5a	400			CN.A5a	400	367.5	CN.B5a	326	344	CN.C5a	420	427.5
+CN.A5b	335			CN.A5b	335		CN.B5b	362		CN.C5b	435	
+CN.A6a	263			CN.A6a	263	261	CN.B6a	191	229.5	CN.C6a	662	501
+CN.A6b	259			CN.A6b	259		CN.B6b	268		CN.C6b	340	
+CN.B1a	1045											
+CN.B1b	1073											
+CN.B2a	550											
+CN.B2b	893			1	1105.166667	178.8980156						
+CN.B3a	563											
+CN.B3b	539			2	844.5	132.2289681						
+CN.B4a	504											
+CN.B4b	573			3	719.5	82.02438662						
+CN.B5a	326											
+CN.B5b	362			4	600.5	28.99137803						
+CN.B6a	191											
+CN.B6b	268			5	379.6666667	37.12310601						
+CN.C1a	1262											
+CN.C1b	1233			6	330.5	283.5498193						
+CN.C2a	1060											
+CN.C2b	818											
+CN.C3a	879											
+CN.C3b	810											
+CN.C4a	636											
+CN.C4b	700											
+CN.C5a	420											
+CN.C5b	435											
+CN.C6a	662											
+CN.C6b	340											
