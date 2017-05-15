@@ -26,6 +26,70 @@ write.table(otuShannon, "otuShannon.txt", sep="\t")
 otuSimpsons <- diversity(otuNorm, "simpson") 
 write.table(otuSimpsons, "otuSimpsons.txt", sep="\t")
 
+# even
+
+OtuEven <- otuShannon/log(specnumber((otuNorm)))
+
+#plot
+
+otuRichPlot <- ggplot(data = envData, aes(Stage, otuRichness, fill = Stage)) +
+  geom_boxplot()+
+  labs(y = "OTU richness (S)", x = "SParticle size (um)")+
+  #coord_cartesian(ylim = c(1,6))+
+  theme(legend.position="none")+
+  theme_bw()+
+  #ggtitle("Gram negative") +
+  theme(plot.title=element_text(face="italic"),legend.position="none", axis.title = element_text(size=7))
+
+
+otuRichPlot
+
+
+ShanPlot <- ggplot(data = envData, aes(Stage, otuShannon, fill = Stage)) +
+  geom_boxplot()+
+  labs(y = "Shannon Winer Index (H)", x = "Particle size (um)")+
+  #coord_cartesian(ylim = c(1,6))+
+  theme(legend.position="none")+
+  theme_bw()+
+  #ggtitle("Gram negative") +
+  theme(plot.title=element_text(face="italic"),legend.position="none", axis.title = element_text(size=7))
+
+
+ShanPlot
+
+
+SimpPlot <- ggplot(data = envData, aes(Stage, otuSimpsons, fill = Stage)) +
+  geom_boxplot()+
+  labs(y = "Simpson's Index (1-D)", x = "Particle size (um)")+
+  #coord_cartesian(ylim = c(1,6))+
+  theme(legend.position="none")+
+  theme_bw()+
+  #ggtitle("Gram negative") +
+  theme(plot.title=element_text(face="italic"),legend.position="none", axis.title = element_text(size=7))
+
+theme(legend.position="none")
+
+SimpPlot
+
+EvenPlot  <- ggplot(data = envData, aes(Stage, OtuEven, fill = Stage)) +
+  geom_boxplot()+
+  labs(y = "Pielou's evenness (J)", x = "Particle size (um)")+
+  theme(legend.position="none")+
+  theme_bw()+
+  #ggtitle("Gram negative") +
+  theme(plot.title=element_text(face="italic"),legend.position="none", axis.title = element_text(size=7))
+
+EvenPlot
+
+
+multiplot(otuRichPlot, ShanPlot, SimpPlot, EvenPlot, cols=2)
+
+tiff("div.tiff", height = 5, width = 7, units = "in", res=300)
+#postscript("Figure1.tiff", width = 672, height = 672)
+multiplot(otuRichPlot, ShanPlot, SimpPlot, EvenPlot, cols=2)
+dev.off()
+
+
 # alpha div test statistics
 
 envData <- read.csv("env.csv", header = T) 
@@ -83,6 +147,7 @@ commSim <- vegdist(otuNorm, "jaccard")
 par(mfrow = c(1, 2)) # make heat map and cluster
 heatmap(as.matrix(commSim)) 
 plot(hclust(commSim)) 
+par(mfrow = c(1, 1)) # make heat map and cluster
 
 # permanover to test cluters
 
@@ -117,15 +182,18 @@ nmdsResult
 
 with(envData, levels(stage))
 scl <- 6
-colvec <- c("grey1", "grey20","grey40","grey60","grey70","grey80")
+colvec <- c("coral1", "darkgoldenrod4","chartreuse4","cyan4","cornflowerblue","hotpink")
 treatvec <- c(15,16,17)
 
 plot(nmdsResult, type = "n", scaling = scl)
 
-with(envData, points(nmdsResult, display = "sites", col = colvec[stage], scaling = scl,cex = 1, pch = treatvec[set], bg = colvec[stage]))
+with(envData, points(nmdsResult, display = "sites", col = colvec[stage], scaling = scl, pch = 19))
 
 #cant get legend to work?
 legend('topright', col=colvec[stage], legend=levels(envData$site), pch = 16, cex = 0.7)                  
 
+tiff("nMDSCol.tiff", height = 7, width = 7, units = "in", res=600)
+
+dev.off()
 
 envData$set
